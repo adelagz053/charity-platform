@@ -12,7 +12,7 @@ export function Sidebar() {
     return (
         <div className="flex h-full w-64 flex-col border-l border-surface-200 bg-white shadow-elevation-1">
             <div className="flex h-16 items-center justify-center border-b border-surface-200 px-4">
-                <h1 className="text-xl font-bold text-primary-600">منصة الربط</h1>
+                <h1 className="text-xl font-bold text-primary-600">منصة ربط الجمعيات بالمؤسسات الداعمة</h1>
             </div>
             <nav className="flex-1 space-y-1 px-2 py-4">
                 {navigation.map((item) => (

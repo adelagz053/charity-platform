@@ -10,7 +10,7 @@ const notoSansArabic = Noto_Sans_Arabic({
 });
 
 export const metadata: Metadata = {
-    title: "منصة الربط بين الجمعيات والممولين",
+    title: "منصة ربط الجمعيات بالمؤسسات الداعمة",
     description: "منصة رقمية لربط الجمعيات الخيرية بالممولين في المملكة العربية السعودية",
 };
 
