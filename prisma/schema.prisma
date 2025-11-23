@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("FUNDER") // FUNDER, CHARITY, ADMIN
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  charityProfile Charity?
+  donations      Donation[]
+}
+
+model Charity {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  license     String?
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id])
+  
+  programs    Program[]
+}
+
+model Program {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  target      Float
+  collected   Float    @default(0)
+  image       String?
+  status      String   @default("DRAFT") // DRAFT, ACTIVE, COMPLETED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  charityId   String
+  charity     Charity  @relation(fields: [charityId], references: [id])
+  
+  donations   Donation[]
+}
+
+model Donation {
+  id        String   @id @default(uuid())
+  amount    Float
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  programId String
+  program   Program  @relation(fields: [programId], references: [id])
+}

@@ -1,16 +1,24 @@
 import { Button } from "@/components/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/Card";
 import { Input } from "@/components/Input";
+import { getProgram } from "@/lib/actions/programs";
+import { notFound } from "next/navigation";
 
-export default function ProgramDetailsPage({ params }: { params: { id: string } }) {
+export default async function ProgramDetailsPage({ params }: { params: { id: string } }) {
+    const program = await getProgram(params.id);
+
+    if (!program) {
+        notFound();
+    }
+
     return (
         <div className="grid gap-8 lg:grid-cols-3 h-[calc(100vh-8rem)]">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8 overflow-y-auto pr-2">
                 <div className="relative h-64 w-full bg-surface-200 rounded-xl flex items-center justify-center text-8xl overflow-hidden">
-                    🌊
+                    {program.image || '🌊'}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    <h1 className="absolute bottom-6 right-6 text-4xl font-bold text-white">سقيا الماء</h1>
+                    <h1 className="absolute bottom-6 right-6 text-4xl font-bold text-white">{program.title}</h1>
                 </div>
 
                 <div className="grid gap-6 md:grid-cols-3">
@@ -19,7 +27,7 @@ export default function ProgramDetailsPage({ params }: { params: { id: string } 
                             <CardTitle className="text-sm font-medium text-surface-500">المبلغ المطلوب</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">50,000 ر.س</div>
+                            <div className="text-2xl font-bold">{program.target.toLocaleString()} ر.س</div>
                         </CardContent>
                     </Card>
                     <Card>
@@ -27,7 +35,7 @@ export default function ProgramDetailsPage({ params }: { params: { id: string } 
                             <CardTitle className="text-sm font-medium text-surface-500">المبلغ المجمّع</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold text-primary-600">35,000 ر.س</div>
+                            <div className="text-2xl font-bold text-primary-600">{program.collected.toLocaleString()} ر.س</div>
                         </CardContent>
                     </Card>
                     <Card>
@@ -35,7 +43,7 @@ export default function ProgramDetailsPage({ params }: { params: { id: string } 
                             <CardTitle className="text-sm font-medium text-surface-500">عدد المساهمين</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">142</div>
+                            <div className="text-2xl font-bold">{program.donations ? program.donations.length : 0}</div>
                         </CardContent>
                     </Card>
                 </div>
@@ -45,16 +53,9 @@ export default function ProgramDetailsPage({ params }: { params: { id: string } 
                         <CardTitle>تفاصيل المشروع</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4 text-surface-600 leading-relaxed">
-                        <p>
-                            يهدف هذا المشروع إلى توفير مياه شرب نظيفة للأسر المحتاجة في المناطق النائية.
-                            يتضمن المشروع حفر بئر ارتوازي وتركيب محطة تحلية مصغرة لضمان استدامة المياه الصالحة للشرب.
-                        </p>
-                        <h3 className="font-bold text-surface-900">أهداف المشروع:</h3>
-                        <ul className="list-disc list-inside space-y-1 mr-4">
-                            <li>توفير 10,000 لتر يومياً.</li>
-                            <li>خدمة أكثر من 50 أسرة.</li>
-                            <li>تقليل الأمراض الناتجة عن تلوث المياه.</li>
-                        </ul>
+                        <p>{program.description}</p>
+                        <h3 className="font-bold text-surface-900">عن الجمعية:</h3>
+                        <p>{program.charity?.name}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -78,7 +79,7 @@ export default function ProgramDetailsPage({ params }: { params: { id: string } 
                             م
                         </div>
                         <div className="bg-white p-3 rounded-2xl rounded-tr-none shadow-sm border border-surface-100 max-w-[80%]">
-                            <p className="text-sm">أهلاً بك! كيف يمكنني مساعدتك بخصوص مشروع سقيا الماء؟</p>
+                            <p className="text-sm">أهلاً بك! كيف يمكنني مساعدتك بخصوص مشروع {program.title}؟</p>
                             <span className="text-[10px] text-surface-400 mt-1 block">10:00 ص</span>
                         </div>
                     </div>
@@ -89,7 +90,7 @@ export default function ProgramDetailsPage({ params }: { params: { id: string } 
                             أ
                         </div>
                         <div className="bg-primary-600 text-white p-3 rounded-2xl rounded-tl-none shadow-sm max-w-[80%]">
-                            <p className="text-sm">هل يمكن الحصول على تقرير مفصل عن التكلفة التشغيلية؟</p>
+                            <p className="text-sm">هل يمكن الحصول على تفاصيل أكثر؟</p>
                             <span className="text-[10px] text-primary-100 mt-1 block">10:05 ص</span>
                         </div>
                     </div>
